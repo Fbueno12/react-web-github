@@ -40,6 +40,21 @@ export const Owner = styled.header`
         text-align: center;
         max-width: 400px;
     }
+    nav {
+        display: flex;
+        padding-top: 20px;
+        button {
+            margin: 0 5px;
+            padding: 2.5px 5px;
+            border: 0;
+            background: #ededed;
+        }
+        button.clicked {
+            transition: 500ms;
+            background-color: #7156c1;
+            color: #fff;
+        }
+    }
 `;
 
 export const IssueList = styled.ul`
@@ -98,6 +113,26 @@ export const IssueList = styled.ul`
             margin-top: 5px;
             font-size: 12px;
             color: #999;
+        }
+    }
+    nav {
+        display: flex;
+        flex: 1;
+        justify-content: space-between;
+        margin-top: 10px;
+        button {
+            margin: 0 5px;
+            padding: 2.5px 5px;
+            border: 0;
+            background: #ededed;
+        }
+        button:hover {
+            background: #7159c1;
+            color: #fff;
+        }
+        button:disabled {
+            background: #ff9a9a;
+            cursor: not-allowed;
         }
     }
 `;

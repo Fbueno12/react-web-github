@@ -20,11 +20,14 @@ export default class Repository extends Component {
     state = {
         repository: {},
         issues: [],
+        status: 'open',
         loading: true,
+        page: 1,
     };
 
     async componentDidMount() {
         const { match } = this.props;
+        const { status, page } = this.state;
 
         const repoName = decodeURIComponent(match.params.repository);
 
@@ -32,7 +35,8 @@ export default class Repository extends Component {
             api.get(`/repos/${repoName}`),
             api.get(`/repos/${repoName}/issues`, {
                 params: {
-                    state: 'open',
+                    state: status,
+                    page,
                     per_page: 5,
                 },
             }),
@@ -45,8 +49,30 @@ export default class Repository extends Component {
         });
     }
 
+    componentDidUpdate() {
+        this.componentDidMount();
+    }
+
+    changeState(state) {
+        this.setState({
+            status: state,
+        });
+    }
+
+    changePage(modifier) {
+        let { page } = this.state;
+        if (modifier === 'next') {
+            page += 1;
+        } else {
+            page -= 1;
+        }
+        this.setState({
+            page,
+        });
+    }
+
     render() {
-        const { repository, issues, loading } = this.state;
+        const { repository, issues, loading, status, page } = this.state;
 
         if (loading) {
             return <Loading>Carregando</Loading>;
@@ -62,6 +88,29 @@ export default class Repository extends Component {
                     />
                     <h1>{repository.name}</h1>
                     <p>{repository.description}</p>
+                    <nav>
+                        <button
+                            type="button"
+                            onClick={() => this.changeState('all')}
+                            className={status === 'all' && 'clicked'}
+                        >
+                            All
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => this.changeState('open')}
+                            className={status === 'open' && 'clicked'}
+                        >
+                            Open
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => this.changeState('closed')}
+                            className={status === 'closed' && 'clicked'}
+                        >
+                            Closed
+                        </button>
+                    </nav>
                 </Owner>
                 <IssueList>
                     {issues.map(issue => (
@@ -83,6 +132,21 @@ export default class Repository extends Component {
                             </div>
                         </li>
                     ))}
+                    <nav>
+                        <button
+                            type="button"
+                            onClick={() => this.changePage('back')}
+                            disabled={page === 1}
+                        >
+                            Previous
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => this.changePage('next')}
+                        >
+                            Next
+                        </button>
+                    </nav>
                 </IssueList>
             </Container>
         );

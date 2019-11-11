@@ -12,6 +12,11 @@ export const Form = styled.form`
         border-radius: 4px;
         font-size: 16px;
     }
+
+    input.invalid {
+        transition: 500ms;
+        border-color: red !important;
+    }
 `;
 
 const rotate = keyframes`
